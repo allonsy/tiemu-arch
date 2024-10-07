@@ -14,16 +14,22 @@ depends=('libglade' 'libticalcs' 'sdl')
 options=('!libtool')
 source=(http://download.sourceforge.net/project/gtktiemu/tiemu-linux/TIEmu%203.03/tiemu-3.03-nogdb.tar.gz
         01-build-fix.patch
-		sysdeps.patch)
+        02-new.patch
+        log_link.c
+		    sysdeps.patch)
 md5sums=('2736440d717a0ee97cdb35189814fc93' 
          '3d87b3c7130c9e3bce07f92156c21d70'
-		 'e09e54413b912fd86a553bed7865c32e')
+         'f0aef5853902819b77d34715688ae22d'
+         '6236cac7ee418e85ac44050e0062002c'
+		     'e09e54413b912fd86a553bed7865c32e')
 
 build() {
   cd $srcdir/tiemu-$pkgver
   patch -p1 --input ../01-build-fix.patch
   patch -p1 --input ../sysdeps.patch
   ./configure --without-kde --disable-gdb --prefix=/usr
+  patch -p0 --input ../02-new.patch
+  cp ../../log_link.c src/gui/logger/log_link.c
   make
 }
 

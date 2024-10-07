@@ -1,0 +1,66 @@
+--- src/core/uae/gencpu.c	2007-11-20 20:01:02.000000000 +0200
++++ src/core/uae/gencpu.c	2024-10-07 23:33:29.453131343 +0300
+@@ -304,7 +304,7 @@
+     insn_n_cycles += 4;
+ } 
+ 
+-static void fill_prefetch_next_1 (needcycles)
++static void fill_prefetch_next_1 (int needcycles)
+ {
+     if (needcycles && using_ce) {
+ 	printf ("\tint lostcycles;\n");
+--- src/Makefile	2024-10-07 23:37:13.027562867 +0300
++++ src/Makefile	2024-10-07 23:37:33.117562800 +0300
+@@ -4,9 +4,9 @@
+ CC        = gcc
+ CPP       = gcc -E
+ CXX       = g++
+-CFLAGS    = -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection -D__LINUX__ -fvisibility=hidden -DGTK_DISABLE_DEPRECATED -DDEBUGGER -DNO_GDB -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/libxml2 -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT 
++CFLAGS    = -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=2         -fstack-clash-protection -fcf-protection -D__LINUX__ -fvisibility=hidden -DGTK_DISABLE_DEPRECATED -DDEBUGGER -DNO_GDB -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/libxml2 -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT 
+ LDFLAGS   = -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -Wl,--export-dynamic -lticonv -lticables2 -ltifiles2 -lticalcs2 -lglib-2.0 -lglib-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lharfbuzz -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lglib-2.0 -lgobject-2.0 -lpangoft2-1.0 -lpango-1.0 -lfontconfig -lfreetype -lglade-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lharfbuzz -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lglib-2.0 -lgobject-2.0 -lpangoft2-1.0 -lpango-1.0 -lfontconfig -lfreetype -lxml2 -lz -lpthread -lm  -L/usr/lib -lSDL -lpthread $(extra_ldflags)
+-CXXFLAGS  = -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection -D__LINUX__ -fvisibility=hidden -DGTK_DISABLE_DEPRECATED -DDEBUGGER -fno-rtti -fno-exceptions -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/libxml2 -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread
++CXXFLAGS  = -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=2         -fstack-clash-protection -fcf-protection -D__LINUX__ -fvisibility=hidden -DGTK_DISABLE_DEPRECATED -DDEBUGGER -fno-rtti -fno-exceptions -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/tilp2 -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/tilp2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/libxml2 -I/usr/include/pixman-1 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/sysprof-6 -pthread
+ MOC       = 
+ DCOPIDL   = 
+ DCOPIDL2CPP = 
+--- src/core/uae/newcpu.c	2008-05-25 16:08:41.000000000 +0300
++++ src/core/uae/newcpu.c	2024-10-07 23:57:29.511685984 +0300
+@@ -19,6 +19,8 @@
+ #include "options.h"
+ #include "memory.h"
+ #include "newcpu.h"
++#include "../ti_sw/romcalls.h"
++#include "../ti_sw/handles.h"
+ 
+ // tiemu begin
+ #include "tilibs.h"
+--- src/gui/about.c	2024-10-08 00:00:09.932636707 +0300
++++ src/gui/about.c	2024-10-07 23:59:39.089116056 +0300
+@@ -103,7 +103,7 @@
+ 	dlg = GTK_ABOUT_DIALOG(widget);
+ 	pix = create_pixbuf("logo.xpm");
+ 
+-	gtk_about_dialog_set_name(dlg, "TiEmu - Ti Emulator - ");
++	gtk_about_dialog_set_program_name(dlg, "TiEmu - Ti Emulator - ");
+ 	gtk_about_dialog_set_version(dlg, TIEMU_VERSION);
+ 	gtk_about_dialog_set_comments(dlg, version);
+ 	gtk_about_dialog_set_copyright(dlg, "Copyright (c) 1999-2007 The TiEmu Team");
+--- src/gui/debugger/dbg_mem.c	2024-10-08 00:05:10.777894786 +0300
++++ src/gui/debugger/dbg_mem.c	2024-10-08 00:05:58.108211847 +0300
+@@ -551,7 +551,7 @@
+ 
+ 	menu = gtk_menu_new();
+ 	g_object_set_data_full(G_OBJECT(menu), "memmap_menu",
+-			       gtk_widget_ref(menu),
++			       menu,
+ 			       (GDestroyNotify)g_object_unref);
+ 
+ 	// (re)load mem map
+@@ -574,7 +574,7 @@
+ 
+ 		item = gtk_menu_item_new_with_label(label);
+ 		g_object_set_data_full(G_OBJECT(menu), "c_drive",
+-					   gtk_widget_ref(item),
++					   item,
+ 					   (GDestroyNotify)g_object_unref);
+ 		gtk_widget_show(item);
